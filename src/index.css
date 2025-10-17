@@ -17,5 +17,11 @@
   --color-gray-800: #19181B;
   --color-gray-900: #050505;
 
+  --text-*: initial;
+
+  --text-lg: 2rem; /* font-size: 32px */
+  --text-md: 1rem; /* font-size: 16px */
+  --text-sm: 0.875rem; /* font-size: 14px */
+
   --font-sans: "Catamaran", sans-serif;
 }
