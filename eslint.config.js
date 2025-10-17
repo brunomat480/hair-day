@@ -25,7 +25,8 @@ export default defineConfig([
       "semi": ["error", "always"],
       "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
       "arrow-parens": ["error", "always"],
-      "comma-dangle": ["error", "always-multiline"]
+      "comma-dangle": ["error", "always-multiline"],
+      "@typescript-eslint/no-empty-object-type": "off"
     }
   },
 ])
