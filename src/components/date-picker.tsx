@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface DatePickerProps extends Omit<ComponentProps<'input'>, 'value'> {
-  onDate: (dateValue: Date) => void;
+  left?: boolean
+  onDate?: (dateValue: Date) => void;
 }
 
 const MONTHS_PT = [
@@ -27,8 +28,9 @@ const MONTHS_PT = [
 const WEEKDAYS_PT = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
 export function DatePicker({
+  left = false,
   className,
-  onDate,
+  // onDate,
   ...props
 }: DatePickerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -59,7 +61,7 @@ export function DatePicker({
   function handleDateSelect(day: number) {
     const newDate = new Date(currentYear, currentMonth, day);
     setSelectedDate(newDate);
-    onDate(newDate);
+    // onDate(newDate);
     setIsOpen(false);
   };
 
@@ -152,7 +154,7 @@ export function DatePicker({
   };
 
   return (
-    <div ref={containerRef} className={twMerge('relative w-full max-w-sm', className)}>
+    <div ref={containerRef} className={twMerge('relative', className)}>
       <div className="relative">
         <Input
           icon={CalendarBlankIcon}
@@ -170,7 +172,7 @@ export function DatePicker({
 
       {/* Calendar Dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-gray-600 border border-gray-500 rounded-lg shadow-2xl z-10">
+        <div className={twMerge('absolute top-full  mt-2 p-4 bg-gray-600 border border-gray-500 rounded-lg shadow-2xl z-10 min-w-80', left ? '-left-44' : 'left-0 right-0')}>
           {/* Month/Year Header */}
           <div className="flex items-center justify-between mb-4">
             <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-800 rounded transition-colors">

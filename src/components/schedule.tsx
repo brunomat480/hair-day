@@ -63,7 +63,7 @@ export function Schedule() {
   const datesWithScheduling = scheduleList.filter((schedule) => formatDate(schedule.date) === formatDate(date));
 
   return (
-    <div className="bg-gray-700 px-20 p-20 rounded-xl">
+    <div className="bg-gray-700 px-20 p-20 rounded-xl min-w-lg">
       <div className="space-y-2">
         <Text as="h1" variant="lg" className="font-bold">
             Agende um atendimento

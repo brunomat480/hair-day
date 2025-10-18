@@ -25,3 +25,8 @@
 
   --font-sans: "Catamaran", sans-serif;
 }
+
+@utility container {
+  padding-inline: 0.75rem;
+  max-width: 1440px;
+}
