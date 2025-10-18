@@ -1,13 +1,11 @@
 import { Input } from '@/components/input';
-import { CalendarBlankIcon, CaretLeftIcon, CaretRightIcon, CaretUpIcon } from '@phosphor-icons/react';
-import type { JSX } from 'react';
+import { CalendarBlankIcon, CaretDownIcon, CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
+import type { ComponentProps, JSX } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-interface DatePickerProps {
-  value?: Date
+interface DatePickerProps extends Omit<ComponentProps<'input'>, 'onChange'> {
   onChange?: (date: Date) => void
-  className?: string
 }
 
 const MONTHS_PT = [
@@ -28,9 +26,11 @@ const MONTHS_PT = [
 const WEEKDAYS_PT = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
 export function DatePicker({
-  value, onChange, className,
+  className,
+  onChange,
+  ...props
 }: DatePickerProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(value || new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(selectedDate.getMonth());
   const [currentYear, setCurrentYear] = useState(selectedDate.getFullYear());
@@ -165,11 +165,12 @@ export function DatePicker({
           type="text"
           value={formatDate(selectedDate)}
           readOnly
-          onClick={() => setIsOpen(!isOpen)}
+          onFocus={() => setIsOpen(!isOpen)}
           className="cursor-pointer pr-12"
+          {...props}
         />
         <button onClick={() => setIsOpen(!isOpen)} className="absolute right-3 top-1/2 -translate-y-1/2">
-          <CaretUpIcon className={twMerge('w-5 h-5 text-gray-400 transition-transform', isOpen && 'rotate-180')} />
+          <CaretDownIcon className={twMerge('w-5 h-5 text-gray-400 transition-transform', isOpen && '-rotate-180')} />
         </button>
       </div>
 
