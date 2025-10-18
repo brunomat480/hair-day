@@ -1,20 +1,18 @@
 import { Button } from '@/components/button';
 import { DatePicker } from '@/components/date-picker';
 import { Input } from '@/components/input';
-import { ScheduleButton } from '@/components/schedule-button';
+import { ScheduleButtonList } from '@/components/schedule-button-list';
 import { Text } from '@/components/text';
 import { formatDate } from '@/utils/format-date';
 import { UserSquareIcon } from '@phosphor-icons/react';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 
-interface Schedule {
+export interface Schedule {
   id: number;
   customer: string;
   date: Date;
   time: string;
 }
-
-const schedules = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
 export function Schedule() {
   const now = new Date();
@@ -64,8 +62,6 @@ export function Schedule() {
 
   const datesWithScheduling = scheduleList.filter((schedule) => formatDate(schedule.date) === formatDate(date));
 
-  const isPastDate = new Date(date).setHours(0, 0, 0, 0) < now.setHours(0, 0, 0, 0);
-
   return (
     <div className="bg-gray-700 px-20 p-20 rounded-xl">
       <div className="space-y-2">
@@ -88,95 +84,29 @@ export function Schedule() {
             <Text className="text-gray-200 font-bold">Horários</Text>
             <div className="space-y-3 mt-2">
               <div className="space-y-3">
-                <div>
-                  <Text as="small" variant="sm" className="text-gray-200">Manhã</Text>
-                  <div className="mt-2 flex gap-2 flex-wrap">
-                    {schedules.map((scheduleItem) => {
-                      const [hour, minutes] = scheduleItem.split(':').map(Number);
+                <ScheduleButtonList
+                  timeOfDay="morning"
+                  date={date}
+                  datesWithScheduling={datesWithScheduling}
+                  time={time}
+                  onTimeSelect={handleTimeSelect}
+                />
 
-                      const now = new Date();
-                      const compareTime = new Date().setHours(hour, minutes, 0);
+                <ScheduleButtonList
+                  timeOfDay="afternoon"
+                  date={date}
+                  datesWithScheduling={datesWithScheduling}
+                  time={time}
+                  onTimeSelect={handleTimeSelect}
+                />
 
-                      const timeAlreadyScheduled = datesWithScheduling.some(
-                        (schedule) => schedule.time === scheduleItem,
-                      );
-
-                      if (hour >= 5 && hour <= 12) {
-                        return (
-                          <ScheduleButton
-                            key={scheduleItem}
-                            type="button"
-                            disabled={timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date))}
-                            time={time}
-                            scheduleItem={scheduleItem}
-                            timeAlreadyScheduled={timeAlreadyScheduled}
-                            onClick={() => handleTimeSelect(scheduleItem)}
-                          />
-                        );
-                      }
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <Text as="small" variant="sm" className="text-gray-200">Tarde</Text>
-                  <div className="mt-2 flex gap-2 flex-wrap">
-                    {schedules.map((scheduleItem) => {
-                      const [hour, minutes] = scheduleItem.split(':').map(Number);
-
-                      const now = new Date();
-                      const compareTime = new Date().setHours(hour, minutes, 0);
-
-                      const timeAlreadyScheduled = datesWithScheduling.some(
-                        (schedule) => schedule.time === scheduleItem,
-                      );
-
-                      if (hour > 12 && hour <= 18) {
-                        return (
-                          <ScheduleButton
-                            key={scheduleItem}
-                            type="button"
-                            disabled={timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date))}
-                            time={time}
-                            scheduleItem={scheduleItem}
-                            timeAlreadyScheduled={timeAlreadyScheduled}
-                            onClick={() => handleTimeSelect(scheduleItem)}
-                          />
-                        );
-                      }
-                    })}
-                  </div>
-                </div>
-
-                <div>
-                  <Text as="small" variant="sm" className="text-gray-200">Noite</Text>
-                  <div className="mt-2 flex gap-2 flex-wrap">
-                    {schedules.map((scheduleItem) => {
-                      const [hour, minutes] = scheduleItem.split(':').map(Number);
-
-                      const now = new Date();
-                      const compareTime = new Date().setHours(hour, minutes, 0);
-
-                      const timeAlreadyScheduled = datesWithScheduling.some(
-                        (schedule) => schedule.time === scheduleItem,
-                      );
-
-                      if (hour > 18 && hour <= 23) {
-                        return (
-                          <ScheduleButton
-                            key={scheduleItem}
-                            type="button"
-                            disabled={timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date))}
-                            time={time}
-                            scheduleItem={scheduleItem}
-                            timeAlreadyScheduled={timeAlreadyScheduled}
-                            onClick={() => handleTimeSelect(scheduleItem)}
-                          />
-                        );
-                      }
-                    })}
-                  </div>
-                </div>
+                <ScheduleButtonList
+                  timeOfDay="night"
+                  date={date}
+                  datesWithScheduling={datesWithScheduling}
+                  time={time}
+                  onTimeSelect={handleTimeSelect}
+                />
               </div>
             </div>
           </div>
