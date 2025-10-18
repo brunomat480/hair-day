@@ -1,6 +1,7 @@
 import { Button } from '@/components/button';
 import { DatePicker } from '@/components/date-picker';
 import { Input } from '@/components/input';
+import { ScheduleButton } from '@/components/schedule-button';
 import { Text } from '@/components/text';
 import { formatDate } from '@/utils/format-date';
 import { UserSquareIcon } from '@phosphor-icons/react';
@@ -88,20 +89,15 @@ export function Schedule() {
 
                       if (hour >= 5 && hour <= 12) {
                         return (
-                          <button
+                          <ScheduleButton
                             key={scheduleItem}
                             type="button"
                             disabled={timeAlreadyScheduled}
+                            time={time}
+                            scheduleItem={scheduleItem}
+                            timeAlreadyScheduled={timeAlreadyScheduled}
                             onClick={() => handleTimeSelect(scheduleItem)}
-                            className={twMerge(
-                              'px-5 py-2 rounded-lg select-none border cursor-pointer hover:bg-gray-500 hover:transition hover:duration-150 group disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none',
-                              time === scheduleItem && !timeAlreadyScheduled
-                                ? 'border-yellow'
-                                : 'border-gray-500',
-                            )}
-                          >
-                            <Text className={time === scheduleItem && !timeAlreadyScheduled ? 'text-yellow' : 'text-gray-200'}>{scheduleItem}</Text>
-                          </button>
+                          />
                         );
                       }
                     })}
