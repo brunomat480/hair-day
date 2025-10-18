@@ -25,6 +25,7 @@ export function App() {
 
   function handleDate(date: string) {
     setDate(date);
+    setTime('');
   }
 
   function handleCostumer(event: ChangeEvent<HTMLInputElement>) {
