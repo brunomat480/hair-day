@@ -1,11 +1,12 @@
 import { Input } from '@/components/input';
+import { formatDate } from '@/utils/format-date';
 import { CalendarBlankIcon, CaretDownIcon, CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
 import type { ComponentProps, JSX } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-interface DatePickerProps extends Omit<ComponentProps<'input'>, 'onChange'> {
-  onChange?: (date: Date) => void
+interface DatePickerProps extends Omit<ComponentProps<'input'>, 'value'> {
+  onDate: (date: string) => void;
 }
 
 const MONTHS_PT = [
@@ -27,7 +28,7 @@ const WEEKDAYS_PT = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
 export function DatePicker({
   className,
-  onChange,
+  onDate,
   ...props
 }: DatePickerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -47,13 +48,6 @@ export function DatePicker({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  function formatDate(date: Date) {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
   function getDaysInMonth(month: number, year: number) {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -65,7 +59,7 @@ export function DatePicker({
   function handleDateSelect(day: number) {
     const newDate = new Date(currentYear, currentMonth, day);
     setSelectedDate(newDate);
-    onChange?.(newDate);
+    onDate(formatDate(newDate));
     setIsOpen(false);
   };
 
@@ -176,7 +170,7 @@ export function DatePicker({
 
       {/* Calendar Dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-gray-600 border border-gray-500 rounded-lg shadow-2xl z-50">
+        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-gray-600 border border-gray-500 rounded-lg shadow-2xl z-10">
           {/* Month/Year Header */}
           <div className="flex items-center justify-between mb-4">
             <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-800 rounded transition-colors">

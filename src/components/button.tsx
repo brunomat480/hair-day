@@ -2,9 +2,9 @@ import { Text } from '@/components/text';
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentProps, ReactNode } from 'react';
 
-const buttonVariants = cva('w-full rounded-lg transition disabled:bg-yellow/30 disabled:pointer-events-none cursor-pointer', {
+const buttonVariants = cva('w-full rounded-lg transition disabled:bg-yellow/30 border select-none border-transparent disabled:pointer-events-none cursor-pointer', {
   variants: {
-    variant: { primary: 'bg-yellow border hover:border-yellow-light' },
+    variant: { primary: 'bg-yellow hover:border-yellow-light' },
     size: { lg: 'h-14 max-w-sm' },
   },
   defaultVariants: {
