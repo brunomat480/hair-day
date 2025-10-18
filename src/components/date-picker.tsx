@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface DatePickerProps extends Omit<ComponentProps<'input'>, 'value'> {
-  onDate: (date: string) => void;
+  onDate: (dateValue: Date) => void;
 }
 
 const MONTHS_PT = [
@@ -59,7 +59,7 @@ export function DatePicker({
   function handleDateSelect(day: number) {
     const newDate = new Date(currentYear, currentMonth, day);
     setSelectedDate(newDate);
-    onDate(formatDate(newDate));
+    onDate(newDate);
     setIsOpen(false);
   };
 

@@ -6,25 +6,26 @@ import { Text } from '@/components/text';
 import { formatDate } from '@/utils/format-date';
 import { UserSquareIcon } from '@phosphor-icons/react';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 interface Schedule {
   id: number;
   customer: string;
-  date: string;
+  date: Date;
   time: string;
 }
 
 const schedules = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
 export function Schedule() {
-  const [date, setDate] = useState(formatDate(new Date));
+  const now = new Date();
+
+  const [date, setDate] = useState(now);
   const [customer, setCustomer] = useState('');
   const [time, setTime] = useState('');
   const [scheduleList, setScheduleList] = useState<Schedule[]>([]);
 
-  function handleDate(date: string) {
-    setDate(date);
+  function handleDate(dateValue: Date) {
+    setDate(dateValue);
     setTime('');
   }
 
@@ -47,12 +48,23 @@ export function Schedule() {
       time,
     };
 
+    const scheduleAlredyExists = scheduleList.some((schedule) =>
+      formatDate(schedule.date) === formatDate(date) && schedule.time === time);
+
+    if (scheduleAlredyExists) {
+      return;
+    }
+
     setScheduleList((prevState) => [...prevState, newSchedule]);
+    setCustomer('');
+    setTime('');
   }
 
   const isDisabled = !!(date && customer && time);
 
-  const datesWithScheduling = scheduleList.filter((schedule) => schedule.date === date);
+  const datesWithScheduling = scheduleList.filter((schedule) => formatDate(schedule.date) === formatDate(date));
+
+  const isPastDate = new Date(date).setHours(0, 0, 0, 0) < now.setHours(0, 0, 0, 0);
 
   return (
     <div className="bg-gray-700 px-20 p-20 rounded-xl">
@@ -80,8 +92,10 @@ export function Schedule() {
                   <Text as="small" variant="sm" className="text-gray-200">Manhã</Text>
                   <div className="mt-2 flex gap-2 flex-wrap">
                     {schedules.map((scheduleItem) => {
-                      const [hourSplit] = scheduleItem.split(':');
-                      const hour = parseInt(hourSplit, 10);
+                      const [hour, minutes] = scheduleItem.split(':').map(Number);
+
+                      const now = new Date();
+                      const compareTime = new Date().setHours(hour, minutes, 0);
 
                       const timeAlreadyScheduled = datesWithScheduling.some(
                         (schedule) => schedule.time === scheduleItem,
@@ -92,7 +106,7 @@ export function Schedule() {
                           <ScheduleButton
                             key={scheduleItem}
                             type="button"
-                            disabled={timeAlreadyScheduled}
+                            disabled={timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date))}
                             time={time}
                             scheduleItem={scheduleItem}
                             timeAlreadyScheduled={timeAlreadyScheduled}
@@ -108,28 +122,26 @@ export function Schedule() {
                   <Text as="small" variant="sm" className="text-gray-200">Tarde</Text>
                   <div className="mt-2 flex gap-2 flex-wrap">
                     {schedules.map((scheduleItem) => {
-                      const [hourSplit] = scheduleItem.split(':');
-                      const hour = parseInt(hourSplit, 10);
+                      const [hour, minutes] = scheduleItem.split(':').map(Number);
+
+                      const now = new Date();
+                      const compareTime = new Date().setHours(hour, minutes, 0);
+
                       const timeAlreadyScheduled = datesWithScheduling.some(
                         (schedule) => schedule.time === scheduleItem,
                       );
 
                       if (hour > 12 && hour <= 18) {
                         return (
-                          <button
+                          <ScheduleButton
                             key={scheduleItem}
                             type="button"
-                            disabled={timeAlreadyScheduled}
+                            disabled={timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date))}
+                            time={time}
+                            scheduleItem={scheduleItem}
+                            timeAlreadyScheduled={timeAlreadyScheduled}
                             onClick={() => handleTimeSelect(scheduleItem)}
-                            className={twMerge(
-                              'px-5 py-2 rounded-lg select-none border cursor-pointer hover:bg-gray-500 hover:transition hover:duration-150 group disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none',
-                              time === scheduleItem && !timeAlreadyScheduled
-                                ? 'border-yellow'
-                                : 'border-gray-500',
-                            )}
-                          >
-                            <Text className={time === scheduleItem && !timeAlreadyScheduled ? 'text-yellow' : 'text-gray-200'}>{scheduleItem}</Text>
-                          </button>
+                          />
                         );
                       }
                     })}
@@ -140,28 +152,26 @@ export function Schedule() {
                   <Text as="small" variant="sm" className="text-gray-200">Noite</Text>
                   <div className="mt-2 flex gap-2 flex-wrap">
                     {schedules.map((scheduleItem) => {
-                      const [hourSplit] = scheduleItem.split(':');
-                      const hour = parseInt(hourSplit, 10);
+                      const [hour, minutes] = scheduleItem.split(':').map(Number);
+
+                      const now = new Date();
+                      const compareTime = new Date().setHours(hour, minutes, 0);
+
                       const timeAlreadyScheduled = datesWithScheduling.some(
                         (schedule) => schedule.time === scheduleItem,
                       );
 
                       if (hour > 18 && hour <= 23) {
                         return (
-                          <button
+                          <ScheduleButton
                             key={scheduleItem}
                             type="button"
-                            disabled={timeAlreadyScheduled}
+                            disabled={timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date))}
+                            time={time}
+                            scheduleItem={scheduleItem}
+                            timeAlreadyScheduled={timeAlreadyScheduled}
                             onClick={() => handleTimeSelect(scheduleItem)}
-                            className={twMerge(
-                              'px-5 py-2 rounded-lg select-none border cursor-pointer hover:bg-gray-500 hover:transition hover:duration-150 group disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none',
-                              time === scheduleItem && !timeAlreadyScheduled
-                                ? 'border-yellow'
-                                : 'border-gray-500',
-                            )}
-                          >
-                            <Text className={time === scheduleItem && !timeAlreadyScheduled ? 'text-yellow' : 'text-gray-200'}>{scheduleItem}</Text>
-                          </button>
+                          />
                         );
                       }
                     })}
