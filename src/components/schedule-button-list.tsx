@@ -33,7 +33,9 @@ export function ScheduleButtonList({
   date,
   onTimeSelect,
 }: ScheduleButtonListProps) {
-  const isSunday = new Date(date).getDay() === 0;
+  const weekDay = new Date(date).getDay();
+  const isSunday = weekDay === 0;
+  const isSaturday = weekDay === 6;
 
   const isPastDate = new Date(date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0);
 
@@ -55,12 +57,14 @@ export function ScheduleButtonList({
             (schedule) => schedule.time === scheduleItem,
           );
 
+          const isDisabled = timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date)) || isSunday || (isSaturday && hour > 12 && hour <= 21);
+
           if (getTimeOfDay(timeOfDay, hour)) {
             return (
               <ScheduleButton
                 key={scheduleItem}
                 type="button"
-                disabled={timeAlreadyScheduled || isPastDate || compareTime < now.getTime() && formatDate(now) === formatDate(date) || isSunday}
+                disabled={isDisabled}
                 time={time}
                 scheduleItem={scheduleItem}
                 timeAlreadyScheduled={timeAlreadyScheduled}

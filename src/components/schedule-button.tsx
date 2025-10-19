@@ -14,17 +14,19 @@ export function ScheduleButton({
   timeAlreadyScheduled,
   ...props
 }: ScheduleButtonProps) {
+  const isSelected = time === scheduleItem && !timeAlreadyScheduled;
+
   return (
     <button
       className={twMerge(
         'px-5 py-2 rounded-lg select-none border cursor-pointer hover:bg-gray-500 hover:transition hover:duration-150 group disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none',
-        time === scheduleItem && !timeAlreadyScheduled
+        isSelected
           ? 'border-yellow'
           : 'border-gray-500',
       )}
       {...props}
     >
-      <Text className={time === scheduleItem && !timeAlreadyScheduled ? 'text-yellow' : 'text-gray-200'}>{scheduleItem}</Text>
+      <Text className={isSelected ? 'text-yellow' : 'text-gray-200'}>{scheduleItem}</Text>
     </button>
   );
 }
