@@ -1,9 +1,17 @@
 import logoImg from '@/assets/images/logo.svg';
+import { DatePicker } from '@/components/date-picker';
 import { Schedule } from '@/components/schedule';
 import { Text } from '@/components/text';
+import { ScheduleContextProvider } from '@/contexts/schedule-context';
 import { CloudSunIcon, MoonStarsIcon, SunHorizonIcon, TrashIcon } from '@phosphor-icons/react';
+import { useState } from 'react';
 
 export function App() {
+  const [date, setDate] = useState(new Date);
+
+  function handleDate(dateValue: Date) {
+    setDate(dateValue);
+  }
 
   return (
     <div className="bg-gray-900 min-h-screen relative">
@@ -12,7 +20,9 @@ export function App() {
       </header>
 
       <main className="py-3 flex gap-3 container mx-auto">
-        <Schedule />
+        <ScheduleContextProvider>
+          <Schedule />
+        </ScheduleContextProvider>
 
         <div className="py-20 px-28 w-full">
           <div className="flex items-centers justify-between">
@@ -26,7 +36,7 @@ export function App() {
             </div>
 
             <div className="max-w-40">
-              {/* <DatePicker left /> */}
+              <DatePicker onDate={handleDate} left />
             </div>
           </div>
 

@@ -3,22 +3,16 @@ import { DatePicker } from '@/components/date-picker';
 import { Input } from '@/components/input';
 import { ScheduleButtonList } from '@/components/schedule-button-list';
 import { Text } from '@/components/text';
-import { formatDate } from '@/utils/format-date';
+import { useSchedule } from '@/hooks/use-schedule';
 import { UserSquareIcon } from '@phosphor-icons/react';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 
-export interface Schedule {
-  id: number;
-  customer: string;
-  date: Date;
-  time: string;
-}
-
 export function Schedule() {
-  const [date, setDate] = useState(new Date);
+  const { createSchedule } = useSchedule();
+
+  const [date, setDate] = useState(new Date());
   const [customer, setCustomer] = useState('');
   const [time, setTime] = useState('');
-  const [scheduleList, setScheduleList] = useState<Schedule[]>([]);
 
   function handleDate(dateValue: Date) {
     setDate(dateValue);
@@ -37,28 +31,15 @@ export function Schedule() {
   function handleNewSchedule(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const newSchedule: Schedule = {
-      id: scheduleList.length + 1,
-      customer,
-      date,
-      time,
-    };
+    createSchedule({
+      customer, date, time,
+    });
 
-    const scheduleAlredyExists = scheduleList.some((schedule) =>
-      formatDate(schedule.date) === formatDate(date) && schedule.time === time);
-
-    if (scheduleAlredyExists) {
-      return;
-    }
-
-    setScheduleList((prevState) => [...prevState, newSchedule]);
     setCustomer('');
     setTime('');
   }
 
   const isDisabled = !!(date && customer && time);
-
-  const datesWithScheduling = scheduleList.filter((schedule) => formatDate(schedule.date) === formatDate(date));
 
   return (
     <div className="bg-gray-700 px-20 p-20 rounded-xl min-w-lg">
@@ -85,7 +66,7 @@ export function Schedule() {
                 <ScheduleButtonList
                   timeOfDay="morning"
                   date={date}
-                  datesWithScheduling={datesWithScheduling}
+                  // datesWithScheduling={datesWithScheduling}
                   onTimeSelect={handleTimeSelect}
                   time={time}
                 />
@@ -93,7 +74,7 @@ export function Schedule() {
                 <ScheduleButtonList
                   timeOfDay="afternoon"
                   date={date}
-                  datesWithScheduling={datesWithScheduling}
+                  // datesWithScheduling={datesWithScheduling}
                   onTimeSelect={handleTimeSelect}
                   time={time}
                 />
@@ -101,7 +82,7 @@ export function Schedule() {
                 <ScheduleButtonList
                   timeOfDay="night"
                   date={date}
-                  datesWithScheduling={datesWithScheduling}
+                  // datesWithScheduling={datesWithScheduling}
                   onTimeSelect={handleTimeSelect}
                   time={time}
                 />

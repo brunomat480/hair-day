@@ -30,20 +30,21 @@ export default defineConfig([
       "@typescript-eslint/no-empty-object-type": "off",
       "object-curly-spacing": ["error", "always"],
       "object-curly-newline": ["error", {
-      "ObjectExpression": {
-        "multiline": true,
-        "minProperties": 2
-      },
-      "ObjectPattern": {
-        "multiline": true,
-        "minProperties": 3
-      },
-      "ImportDeclaration": "never",
-      "ExportDeclaration": {
-        "multiline": true,
-        "minProperties": 3
-      }
-    }],
+        "ObjectExpression": {
+          "multiline": true,
+          "minProperties": 2
+        },
+        "ObjectPattern": {
+          "multiline": true,
+          "minProperties": 3
+        },
+        "ImportDeclaration": "never",
+        "ExportDeclaration": {
+          "multiline": true,
+          "minProperties": 3
+        }
+      }],
+      'react-refresh/only-export-components': 'off',
     }
   },
 ])
