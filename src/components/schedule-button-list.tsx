@@ -35,6 +35,8 @@ export function ScheduleButtonList({
 }: ScheduleButtonListProps) {
   const isPastDate = new Date(date).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0);
 
+  console.log({ isPastDate });
+
   return (
     <div>
       <Text as="small" variant="sm" className="text-gray-200">
@@ -58,7 +60,7 @@ export function ScheduleButtonList({
               <ScheduleButton
                 key={scheduleItem}
                 type="button"
-                disabled={timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date))}
+                disabled={timeAlreadyScheduled || isPastDate || compareTime < now.getTime() && formatDate(now) === formatDate(date)}
                 time={time}
                 scheduleItem={scheduleItem}
                 timeAlreadyScheduled={timeAlreadyScheduled}

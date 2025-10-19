@@ -1,5 +1,4 @@
 import logoImg from '@/assets/images/logo.svg';
-import { DatePicker } from '@/components/date-picker';
 import { Schedule } from '@/components/schedule';
 import { Text } from '@/components/text';
 import { CloudSunIcon, MoonStarsIcon, SunHorizonIcon, TrashIcon } from '@phosphor-icons/react';
@@ -27,7 +26,7 @@ export function App() {
             </div>
 
             <div className="max-w-40">
-              <DatePicker left />
+              {/* <DatePicker left /> */}
             </div>
           </div>
 

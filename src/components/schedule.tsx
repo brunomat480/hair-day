@@ -15,9 +15,7 @@ export interface Schedule {
 }
 
 export function Schedule() {
-  const now = new Date();
-
-  const [date, setDate] = useState(now);
+  const [date, setDate] = useState(new Date);
   const [customer, setCustomer] = useState('');
   const [time, setTime] = useState('');
   const [scheduleList, setScheduleList] = useState<Schedule[]>([]);
@@ -88,24 +86,24 @@ export function Schedule() {
                   timeOfDay="morning"
                   date={date}
                   datesWithScheduling={datesWithScheduling}
-                  time={time}
                   onTimeSelect={handleTimeSelect}
+                  time={time}
                 />
 
                 <ScheduleButtonList
                   timeOfDay="afternoon"
                   date={date}
                   datesWithScheduling={datesWithScheduling}
-                  time={time}
                   onTimeSelect={handleTimeSelect}
+                  time={time}
                 />
 
                 <ScheduleButtonList
                   timeOfDay="night"
                   date={date}
                   datesWithScheduling={datesWithScheduling}
-                  time={time}
                   onTimeSelect={handleTimeSelect}
+                  time={time}
                 />
               </div>
             </div>

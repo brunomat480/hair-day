@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge';
 
 interface DatePickerProps extends Omit<ComponentProps<'input'>, 'value'> {
   left?: boolean
-  onDate?: (dateValue: Date) => void;
+  onDate: (dateValue: Date) => void;
 }
 
 const MONTHS_PT = [
@@ -30,7 +30,7 @@ const WEEKDAYS_PT = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 export function DatePicker({
   left = false,
   className,
-  // onDate,
+  onDate,
   ...props
 }: DatePickerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -50,6 +50,14 @@ export function DatePicker({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Sincroniza currentMonth e currentYear com selectedDate quando o calendário abre
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentMonth(selectedDate.getMonth());
+      setCurrentYear(selectedDate.getFullYear());
+    }
+  }, [isOpen, selectedDate]);
+
   function getDaysInMonth(month: number, year: number) {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -58,52 +66,81 @@ export function DatePicker({
     return new Date(year, month, 1).getDay();
   };
 
-  function handleDateSelect(day: number) {
-    const newDate = new Date(currentYear, currentMonth, day);
+  function handleDateSelect(day: number, isPrevMonth = false, isNextMonth = false) {
+    let month = currentMonth;
+    let year = currentYear;
+
+    if (isPrevMonth) {
+      if (month === 0) {
+        month = 11;
+        year = year - 1;
+      } else {
+        month = month - 1;
+      }
+    } else if (isNextMonth) {
+      if (month === 11) {
+        month = 0;
+        year = year + 1;
+      } else {
+        month = month + 1;
+      }
+    }
+
+    const newDate = new Date(year, month, day);
     setSelectedDate(newDate);
-    // onDate(newDate);
+    onDate(newDate);
     setIsOpen(false);
   };
 
   function handlePrevMonth() {
     if (currentMonth === 0) {
       setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
+      setCurrentYear((prevState) => prevState - 1);
     } else {
-      setCurrentMonth(currentMonth - 1);
+      setCurrentMonth((preveState) => preveState - 1);
     }
   };
 
   function handleNextMonth() {
     if (currentMonth === 11) {
       setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
+      setCurrentYear((prevState) => prevState + 1);
     } else {
-      setCurrentMonth(currentMonth + 1);
+      setCurrentMonth((prevstate) => prevstate + 1);
     }
   };
+
+  function handleCalendarOpen() {
+    // Sincroniza com a data selecionada antes de abrir
+    setCurrentMonth(selectedDate.getMonth());
+    setCurrentYear(selectedDate.getFullYear());
+    setIsOpen(true);
+  }
 
   function renderCalendarDays(): JSX.Element[] {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
     const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
     const daysInPrevMonth = getDaysInMonth(currentMonth - 1, currentYear);
 
-    const today = new Date().getDate();
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonthIndex = today.getMonth();
+    const currentYearValue = today.getFullYear();
 
     const days: JSX.Element[] = [];
 
     // Previous month days
     for (let i = firstDay - 1; i >= 0; i--) {
+      const prevMonthDay = daysInPrevMonth - i;
       days.push(
         <button
           key={`prev-${i}`}
-          className="h-10 w-10 text-sm text-gray-400 hover:text-gray-400 transition-colors"
+          className="h-10 w-10 text-md text-gray-400 hover:text-gray-400 transition-colors"
           onClick={() => {
-            handlePrevMonth();
-            handleDateSelect(daysInPrevMonth - i);
+            handleDateSelect(prevMonthDay, true);
           }}
         >
-          {daysInPrevMonth - i}
+          {prevMonthDay}
         </button>,
       );
     }
@@ -115,10 +152,15 @@ export function DatePicker({
         currentMonth === selectedDate.getMonth() &&
         currentYear === selectedDate.getFullYear();
 
+      const isToday =
+        day === currentDay &&
+        currentMonth === currentMonthIndex &&
+        currentYear === currentYearValue;
+
       days.push(
         <button
           key={`current-${day}`}
-          data-today={day === today && currentMonth === selectedDate.getMonth() }
+          data-today={isToday}
           data-selected={isSelected}
           onClick={() => handleDateSelect(day)}
           className={twMerge(
@@ -139,10 +181,9 @@ export function DatePicker({
       days.push(
         <button
           key={`next-${day}`}
-          className="h-10 w-10 text-sm text-gray-600 hover:text-gray-400 transition-colors"
+          className="h-10 w-10 text-md text-gray-400 hover:text-gray-400 transition-colors"
           onClick={() => {
-            handleNextMonth();
-            handleDateSelect(day);
+            handleDateSelect(day, false, true);
           }}
         >
           {day}
@@ -161,11 +202,11 @@ export function DatePicker({
           type="text"
           value={formatDate(selectedDate)}
           readOnly
-          onFocus={() => setIsOpen(!isOpen)}
+          onFocus={handleCalendarOpen}
           className="cursor-pointer pr-12"
           {...props}
         />
-        <button onClick={() => setIsOpen(!isOpen)} className="absolute right-3 top-1/2 -translate-y-1/2">
+        <button onClick={handleCalendarOpen} className="absolute right-3 top-1/2 -translate-y-1/2">
           <CaretDownIcon className={twMerge('w-5 h-5 text-gray-400 transition-transform', isOpen && '-rotate-180')} />
         </button>
       </div>
