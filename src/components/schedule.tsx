@@ -64,25 +64,22 @@ export function Schedule() {
             <div className="space-y-3 mt-2">
               <div className="space-y-3">
                 <ScheduleButtonList
-                  timeOfDay="morning"
+                  period="morning"
                   date={date}
-                  // datesWithScheduling={datesWithScheduling}
                   onTimeSelect={handleTimeSelect}
                   time={time}
                 />
 
                 <ScheduleButtonList
-                  timeOfDay="afternoon"
+                  period="afternoon"
                   date={date}
-                  // datesWithScheduling={datesWithScheduling}
                   onTimeSelect={handleTimeSelect}
                   time={time}
                 />
 
                 <ScheduleButtonList
-                  timeOfDay="night"
+                  period="night"
                   date={date}
-                  // datesWithScheduling={datesWithScheduling}
                   onTimeSelect={handleTimeSelect}
                   time={time}
                 />
