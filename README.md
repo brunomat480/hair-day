@@ -5,7 +5,7 @@
   <p><img align="center" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" />Tailwind CSS</p>    
 </div>
 
-<img src="https://github.com/user-attachments/assets/f94ee9be-048d-43f8-952d-8d68845b5428" />
+<img src="https://github.com/user-attachments/assets/41dc7e09-318f-462f-8b33-95a178b97cf4" />
 
 ##
 
