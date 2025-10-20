@@ -2,7 +2,7 @@ import type { PeriodType } from '@/components/schedule-button-list';
 import type { Schedule } from '@/types/schedule';
 import { formatDate } from '@/utils/format-date';
 import { getPeriod } from '@/utils/get-periods';
-import { createContext, useState, type ReactNode } from 'react';
+import { createContext, useEffect, useState, type ReactNode } from 'react';
 
 interface ScheduleContextType {
   schedules: Schedule[];
@@ -18,7 +18,16 @@ interface ScheduleContextProviderPorps {
 }
 
 export function ScheduleContextProvider({ children }: ScheduleContextProviderPorps) {
-  const [schedules, setSchedule] = useState<Schedule[]>([]);
+  const [schedules, setSchedule] = useState<Schedule[]>(() => {
+    const schedulesList = localStorage.getItem('@schedules');
+    return schedulesList ? JSON.parse(schedulesList) : [];
+  });
+
+  useEffect(() => {
+    const scheduleJSON = JSON.stringify(schedules);
+
+    localStorage.setItem('@schedules', scheduleJSON);
+  }, [schedules]);
 
   function createSchedule({
     customer,

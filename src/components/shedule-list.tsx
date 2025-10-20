@@ -65,8 +65,8 @@ export function ScheduleList({ period, schedules }: ScheduleListProps) {
           const timeAlreadyServed = scheduleDateTime < now;
 
           return (
-            <div key={schedule.id} data-time-servhandleDeleteScheduleed={timeAlreadyServed} className="flex items-center justify-between gap-0.5 py-1 data-[time-served=true]:opacity-30">
-              <div className="flex items-center gap-5">
+            <div key={schedule.id} className="flex items-center justify-between gap-0.5 py-1">
+              <div data-time-served={timeAlreadyServed} className="flex items-center gap-5 data-[time-served=true]:opacity-30">
                 <Text className="text-gray-200 font-bold">{schedule?.time}</Text>
                 <Text className="text-gray-200">{schedule?.customer}</Text>
               </div>

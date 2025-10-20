@@ -41,15 +41,20 @@ export function ScheduleButtonList({
       <div className="mt-2 flex gap-2 flex-wrap">
         {hours.map((scheduleItem) => {
           const [hour, minutes] = scheduleItem.split(':').map(Number);
-
           const now = new Date();
-          const compareTime = now.setHours(hour, minutes, 0);
+
+          const currentTime = new Date();
+          currentTime.setHours(now.getHours(), now.getMinutes(), 0, 0);
+
+          const scheduleTime = new Date();
+          scheduleTime.setHours(hour, minutes, 0, 0);
 
           const timeAlreadyScheduled = datesWithScheduling.some(
             (schedule) => schedule.time === scheduleItem,
           );
 
-          const isDisabled = timeAlreadyScheduled || isPastDate || (compareTime < now.getTime() && formatDate(now) === formatDate(date)) || isSunday || (isSaturday && hour > 12 && hour <= 21);
+          const isPastTime = scheduleTime < currentTime && formatDate(now) === formatDate(date);
+          const isDisabled = timeAlreadyScheduled || isPastDate || isPastTime || isSunday || (isSaturday && hour > 12 && hour <= 21);
 
           if (getPeriod(period, hour)) {
             return (
@@ -64,6 +69,8 @@ export function ScheduleButtonList({
               />
             );
           }
+
+          return null;
         })}
       </div>
     </div>
