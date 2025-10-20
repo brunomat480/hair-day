@@ -215,7 +215,7 @@ export function DatePicker({
 
       {/* Calendar Dropdown */}
       {isOpen && (
-        <div className={twMerge('absolute top-full  mt-2 p-4 bg-gray-600 border border-gray-500 rounded-lg shadow-2xl z-10 min-w-80', left ? '-left-44' : 'left-0 right-0')}>
+        <div className={twMerge('absolute top-full  mt-2 p-4 bg-gray-600 border border-gray-500 rounded-lg shadow-2xl z-10 min-w-80', left ? 'lg:-left-44' : 'left-0 right-0')}>
           {/* Month/Year Header */}
           <div className="flex items-center justify-between mb-4">
             <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-800 rounded transition-colors">
