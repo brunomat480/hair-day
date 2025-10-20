@@ -7,7 +7,11 @@ import { useSchedule } from '@/hooks/use-schedule';
 import { UserSquareIcon } from '@phosphor-icons/react';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 
-export function Schedule() {
+interface ScheduleProps {
+  onDate: (date: Date) => void;
+}
+
+export function Schedule({ onDate }: ScheduleProps) {
   const { createSchedule } = useSchedule();
 
   const [date, setDate] = useState(new Date());
@@ -35,6 +39,7 @@ export function Schedule() {
       customer, date, time,
     });
 
+    onDate(date);
     setCustomer('');
     setTime('');
   }

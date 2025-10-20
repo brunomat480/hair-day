@@ -1,28 +1,39 @@
+import { DatePicker } from '@/components/date-picker';
 import { ScheduleList } from '@/components/shedule-list';
 import { Text } from '@/components/text';
 import { useSchedule } from '@/hooks/use-schedule';
-import { getPeriod } from '@/utils/get-periods';
+import { formatDate } from '@/utils/format-date';
+import { useMemo } from 'react';
 
-export function ScheduledTimes() {
-  const { schedules } = useSchedule();
+interface ScheduledTimesProps {
+  date: Date
+  onDate: (date: Date) => void
+}
 
-  const schedulesMorning = schedules.filter((schedule) => {
-    const [hour] = schedule?.time.split(':').map(Number);
+export function ScheduledTimes({ onDate, date }: ScheduledTimesProps) {
+  const { schedules, filterByPeriod } = useSchedule();
 
-    return getPeriod('morning', hour);
-  });
+  const filteredSchedules = useMemo(() => {
+    const currentDateSchedules = schedules.filter(
+      (schedule) => formatDate(date) === formatDate(schedule.date),
+    );
 
-  const schedulesAfternoon = schedules.filter((schedule) => {
-    const [hour] = schedule?.time.split(':').map(Number);
+    const morning = filterByPeriod(currentDateSchedules, 'morning');
+    const afternoon = filterByPeriod(currentDateSchedules, 'afternoon');
+    const night = filterByPeriod(currentDateSchedules, 'night');
 
-    return getPeriod('afternoon', hour);
-  });
+    return {
+      morning,
+      afternoon,
+      night,
+    };
+  }, [schedules, date]);
 
-  const schedulesNight = schedules.filter((schedule) => {
-    const [hour] = schedule?.time.split(':').map(Number);
-
-    return getPeriod('night', hour);
-  });
+  const {
+    morning,
+    afternoon,
+    night,
+  } = filteredSchedules;
 
   return (
     <div className="py-20 px-28 w-full">
@@ -37,14 +48,14 @@ export function ScheduledTimes() {
         </div>
 
         <div className="max-w-40">
-          {/* <DatePicker onDate={handleDate} left /> */}
+          <DatePicker onDate={onDate} filterDate={date} left />
         </div>
       </div>
 
       <div className="mt-8 space-y-3">
-        <ScheduleList period="morning" schedules={schedulesMorning} />
-        <ScheduleList period="afternoon" schedules={schedulesAfternoon} />
-        <ScheduleList period="night" schedules={schedulesNight} />
+        <ScheduleList period="morning" schedules={morning} />
+        <ScheduleList period="afternoon" schedules={afternoon} />
+        <ScheduleList period="night" schedules={night} />
       </div>
     </div>
   );

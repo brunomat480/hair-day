@@ -1,10 +1,13 @@
+import type { PeriodType } from '@/components/schedule-button-list';
 import type { Schedule } from '@/types/schedule';
 import { formatDate } from '@/utils/format-date';
+import { getPeriod } from '@/utils/get-periods';
 import { createContext, useState, type ReactNode } from 'react';
 
 interface ScheduleContextType {
   schedules: Schedule[];
   createSchedule: (schedule: Schedule) => void;
+  filterByPeriod: (currentDateSchedules: Schedule[], period: PeriodType) => Schedule[];
 }
 
 export const ScheduleContext = createContext({} as ScheduleContextType);
@@ -39,10 +42,18 @@ export function ScheduleContextProvider({ children }: ScheduleContextProviderPor
 
   }
 
+  function filterByPeriod(currentDateSchedules: Schedule[], period: PeriodType) {
+    return currentDateSchedules.filter((schedule) => {
+      const [hour] = schedule.time.split(':').map(Number);
+      return getPeriod(period, hour);
+    });
+  };
+
   return (
     <ScheduleContext.Provider value={{
       schedules,
       createSchedule,
+      filterByPeriod,
     }}>
       {children}
     </ScheduleContext.Provider>

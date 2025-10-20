@@ -45,7 +45,8 @@ export default defineConfig([
         }
       }],
       'react-refresh/only-export-components': 'off',
-      'no-unsafe-optional-chaining': 'off'
+      'no-unsafe-optional-chaining': 'off',
+      'react-hooks/exhaustive-deps': 'off'
     }
   },
 ])

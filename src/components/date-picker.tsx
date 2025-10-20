@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface DatePickerProps extends Omit<ComponentProps<'input'>, 'value'> {
-  left?: boolean
+  left?: boolean;
+  filterDate?: Date
   onDate: (dateValue: Date) => void;
 }
 
@@ -30,10 +31,11 @@ const WEEKDAYS_PT = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 export function DatePicker({
   left = false,
   className,
+  filterDate,
   onDate,
   ...props
 }: DatePickerProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(filterDate || new Date());
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(selectedDate.getMonth());
   const [currentYear, setCurrentYear] = useState(selectedDate.getFullYear());
@@ -165,7 +167,7 @@ export function DatePicker({
           onClick={() => handleDateSelect(day)}
           className={twMerge(
             'size-9 rounded-md transition-all underline-offset-8',
-            'hover:bg-gray-800 hover:text-white text-gray-200 data-[today=true]:text-gray-100 data-[today=true]:underline data-[selected=true]:border-2 data-[selected=true]:border-yellow-dark data-[selected=true]:text-gray-100 data-[selected=true]:font-bold data-[selected=true]:bg-gray-500',
+            'hover:bg-gray-800 hover:text-white text-gray-200 data-[today=true]:text-gray-100 data-[today=true]:underline data-[selectednewDate=true]:border-2 data-[selected=true]:border-yellow-dark data-[selected=true]:text-gray-100 data-[selected=true]:font-bold data-[selected=true]:bg-gray-500',
           )}
         >
           {day}
@@ -200,7 +202,7 @@ export function DatePicker({
         <Input
           icon={CalendarBlankIcon}
           type="text"
-          value={formatDate(selectedDate)}
+          value={formatDate(filterDate || selectedDate)}
           readOnly
           onFocus={handleCalendarOpen}
           className="cursor-pointer pr-12"
