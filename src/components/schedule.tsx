@@ -47,9 +47,9 @@ export function Schedule({ onDate }: ScheduleProps) {
   const isDisabled = !!(date && customer && time);
 
   return (
-    <div className="bg-gray-700 px-20 p-20 rounded-xl min-w-lg">
+    <div className="bg-gray-700 px-8 py-20 md:p-20 rounded-xl md:min-w-lg">
       <div className="space-y-2">
-        <Text as="h1" variant="lg" className="font-bold">
+        <Text as="h1" variant="lg" className="font-bold leading-10">
             Agende um atendimento
         </Text>
         <Text as="p" variant="md" className="text-gray-300">

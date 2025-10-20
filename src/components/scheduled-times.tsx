@@ -36,8 +36,8 @@ export function ScheduledTimes({ onDate, date }: ScheduledTimesProps) {
   } = filteredSchedules;
 
   return (
-    <div className="py-20 px-28 w-full">
-      <div className="flex items-centers justify-between">
+    <div className="py-20 md:px-28 w-full px-8">
+      <div className="flex flex-wrap lg:flex-nowrap gap-y-4 items-centers justify-between">
         <div className="space-y-2">
           <Text as="h2" variant="lg" className="font-bold">
               Sua agenda

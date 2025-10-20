@@ -1,5 +1,6 @@
 import type { PeriodType } from '@/components/schedule-button-list';
 import type { Schedule } from '@/types/schedule';
+import { formatDate } from '@/utils/format-date';
 import { getPeriod } from '@/utils/get-periods';
 import { createContext, useState, type ReactNode } from 'react';
 
@@ -7,6 +8,7 @@ interface ScheduleContextType {
   schedules: Schedule[];
   createSchedule: (schedule: Schedule) => void;
   filterByPeriod: (currentDateSchedules: Schedule[], period: PeriodType) => Schedule[];
+  deleteSchedule: (id: number) => void;
 }
 
 export const ScheduleContext = createContext({} as ScheduleContextType);
@@ -30,15 +32,18 @@ export function ScheduleContextProvider({ children }: ScheduleContextProviderPor
       time,
     };
 
-    // const scheduleAlredyExists = schedules.some((schedule) =>
-    //   formatDate(schedule.date) === formatDate(date) && schedule.time === time);
+    const scheduleAlredyExists = schedules.some((schedule) =>
+      formatDate(schedule.date) === formatDate(date) && schedule.time === time);
 
-    // if (scheduleAlredyExists) {
-    //   return;
-    // }
+    if (scheduleAlredyExists) {
+      return;
+    }
 
     setSchedule((prevState) => [...prevState, newSchedule]);
+  }
 
+  function deleteSchedule(id: number) {
+    setSchedule((prevState) => prevState.filter((schedule) => schedule.id !== id));
   }
 
   function filterByPeriod(currentDateSchedules: Schedule[], period: PeriodType) {
@@ -53,6 +58,7 @@ export function ScheduleContextProvider({ children }: ScheduleContextProviderPor
       schedules,
       createSchedule,
       filterByPeriod,
+      deleteSchedule,
     }}>
       {children}
     </ScheduleContext.Provider>

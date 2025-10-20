@@ -1,5 +1,6 @@
 import type { PeriodType } from '@/components/schedule-button-list';
 import { Text } from '@/components/text';
+import { useSchedule } from '@/hooks/use-schedule';
 import type { Schedule } from '@/types/schedule';
 import { CloudSunIcon, MoonStarsIcon, SunHorizonIcon, TrashIcon } from '@phosphor-icons/react';
 
@@ -27,9 +28,16 @@ const timeOfDayPeriod = {
 };
 
 export function ScheduleList({ period, schedules }: ScheduleListProps) {
+  const { deleteSchedule } = useSchedule();
 
   if (schedules.length <= 0) {
     return null;
+  }
+
+  function handleDeleteSchedule(id: number | undefined) {
+    if (id) {
+      deleteSchedule(id);
+    }
   }
 
   const Icon = timeOfDayPeriod[period].icon;
@@ -56,16 +64,18 @@ export function ScheduleList({ period, schedules }: ScheduleListProps) {
 
           const timeAlreadyServed = scheduleDateTime < now;
 
-          console.log({ timeAlreadyServed });
-
           return (
-            <div key={schedule.id} data-time-served={timeAlreadyServed} className="flex items-center justify-between gap-0.5 py-1 data-[time-served=true]:opacity-30">
+            <div key={schedule.id} data-time-servhandleDeleteScheduleed={timeAlreadyServed} className="flex items-center justify-between gap-0.5 py-1 data-[time-served=true]:opacity-30">
               <div className="flex items-center gap-5">
                 <Text className="text-gray-200 font-bold">{schedule?.time}</Text>
                 <Text className="text-gray-200">{schedule?.customer}</Text>
               </div>
 
-              <button type="button" className="group p-1 rounded cursor-pointer">
+              <button
+                type="button"
+                onClick={() => handleDeleteSchedule(schedule?.id)}
+                className="group p-1 rounded cursor-pointer"
+              >
                 <TrashIcon className="size-4 fill-yellow group-hover:fill-yellow-dark" />
               </button>
             </div>

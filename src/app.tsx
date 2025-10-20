@@ -18,7 +18,7 @@ export function App() {
         <img src={logoImg} alt="Logo da HairDay" />
       </header>
 
-      <main className="py-3 flex gap-3 container mx-auto">
+      <main className="py-3 flex flex-wrap lg:flex-nowrap gap-3 container mx-auto">
         <ScheduleContextProvider>
           <Schedule onDate={handleDate} />
           <ScheduledTimes onDate={handleDate} date={date} />
