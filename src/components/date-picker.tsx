@@ -150,9 +150,9 @@ export function DatePicker({
     // Current month days
     for (let day = 1; day <= daysInMonth; day++) {
       const isSelected =
-        day === selectedDate.getDate() &&
-        currentMonth === selectedDate.getMonth() &&
-        currentYear === selectedDate.getFullYear();
+        day === (filterDate?.getDate() || selectedDate.getDate()) &&
+        currentMonth === (filterDate?.getMonth() || selectedDate.getMonth()) &&
+        currentYear === (filterDate?.getFullYear() || selectedDate.getFullYear());
 
       const isToday =
         day === currentDay &&

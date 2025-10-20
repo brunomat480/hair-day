@@ -46,18 +46,31 @@ export function ScheduleList({ period, schedules }: ScheduleListProps) {
       </div>
 
       <div  className="border border-gray-600 p-5 rounded-b-lg">
-        {schedules.map((schedule) => (
-          <div key={schedule.id} className="flex items-center justify-between gap-0.5 py-1">
-            <div className="flex items-center gap-5">
-              <Text className="text-gray-200 font-bold">{schedule?.time}</Text>
-              <Text className="text-gray-200">{schedule?.customer}</Text>
-            </div>
+        {schedules.map((schedule) => {
+          const [hour, minutes] = schedule.time.split(':').map(Number);
 
-            <button type="button" className="group p-1 rounded cursor-pointer">
-              <TrashIcon className="size-4 fill-yellow group-hover:fill-yellow-dark" />
-            </button>
-          </div>
-        ),
+          const now = new Date();
+
+          const scheduleDateTime = new Date(schedule.date);
+          scheduleDateTime.setHours(hour, minutes, 0, 0);
+
+          const timeAlreadyServed = scheduleDateTime < now;
+
+          console.log({ timeAlreadyServed });
+
+          return (
+            <div key={schedule.id} data-time-served={timeAlreadyServed} className="flex items-center justify-between gap-0.5 py-1 data-[time-served=true]:opacity-30">
+              <div className="flex items-center gap-5">
+                <Text className="text-gray-200 font-bold">{schedule?.time}</Text>
+                <Text className="text-gray-200">{schedule?.customer}</Text>
+              </div>
+
+              <button type="button" className="group p-1 rounded cursor-pointer">
+                <TrashIcon className="size-4 fill-yellow group-hover:fill-yellow-dark" />
+              </button>
+            </div>
+          );
+        },
         )}
       </div>
     </div>

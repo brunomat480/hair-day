@@ -43,7 +43,7 @@ export function ScheduleButtonList({
           const [hour, minutes] = scheduleItem.split(':').map(Number);
 
           const now = new Date();
-          const compareTime = new Date().setHours(hour, minutes, 0);
+          const compareTime = now.setHours(hour, minutes, 0);
 
           const timeAlreadyScheduled = datesWithScheduling.some(
             (schedule) => schedule.time === scheduleItem,
