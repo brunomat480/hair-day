@@ -34,6 +34,13 @@ export function ScheduleList({ period, schedules }: ScheduleListProps) {
     return null;
   }
 
+  const schedulesAsc = schedules.sort((a, b) => {
+    const [hourA, minuteA] = a.time.split(':').map(Number);
+    const [hourB, minuteB] = b.time.split(':').map(Number);
+
+    return hourA - hourB || minuteA - minuteB;
+  });
+
   function handleDeleteSchedule(id: number | undefined) {
     if (id) {
       deleteSchedule(id);
@@ -53,8 +60,8 @@ export function ScheduleList({ period, schedules }: ScheduleListProps) {
         <Text className="text-gray-400" variant="sm">{timeOfDayPeriod[period].hours}</Text>
       </div>
 
-      <div  className="border border-gray-600 p-5 rounded-b-lg">
-        {schedules.map((schedule) => {
+      <div className="border border-gray-600 p-5 rounded-b-lg">
+        {schedulesAsc.map((schedule) => {
           const [hour, minutes] = schedule.time.split(':').map(Number);
 
           const now = new Date();
